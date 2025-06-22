@@ -1,29 +1,75 @@
 {
   "expo": {
-    "name": "seren-residential-app",
+    "name": "Seren Residential",
     "slug": "seren-residential-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#1a1a2e"
     },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.serenresidential.app",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Seren Residential needs location access to send emergency alerts with your precise location to estate security.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "Seren Residential needs location access to send emergency alerts with your precise location to estate security.",
+        "NSCameraUsageDescription": "Seren Residential needs camera access to take photos for complaint submissions.",
+        "NSPhotoLibraryUsageDescription": "Seren Residential needs photo library access to attach images to complaint submissions.",
+        "NSMicrophoneUsageDescription": "Seren Residential may need microphone access for emergency features."
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#1a1a2e"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.serenresidential.app",
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "RECORD_AUDIO",
+        "CALL_PHONE",
+        "VIBRATE",
+        "WAKE_LOCK"
+      ]
     },
     "web": {
-      "favicon": "./assets/favicon.png"
-    }
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Seren Residential uses location to send emergency alerts with your precise coordinates to estate security for fastest response times."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Seren Residential needs access to your photo library to attach images to complaint submissions.",
+          "cameraPermission": "Seren Residential needs camera access to take photos for complaint submissions."
+        }
+      ]
+    ],
+    "scheme": "seren-residential",
+    "extra": {
+      "eas": {
+        "projectId": "your-eas-project-id"
+      }
+    },
+    "owner": "serenresidential"
   }
 }
