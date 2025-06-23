@@ -10,13 +10,18 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useNavigation } from '@react-navigation/native';
+import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import Screen from '../components/Screen';
 import GlassCard from '../components/GlassCard';
 import { useTheme } from '../context/ThemeContext';
 import AlertService from '../services/AlertService';
-import { EstateAlert } from '../types';
+import { EstateAlert, RootTabParamList } from '../types';
+
+type HomeScreenNavigationProp = BottomTabNavigationProp<RootTabParamList, 'Home'>;
 
 export default function HomeScreen() {
+  const navigation = useNavigation<HomeScreenNavigationProp>();
   const { theme, isDark, toggleTheme } = useTheme();
   const [isEmergencyActive, setIsEmergencyActive] = useState(false);
   const [recentAlerts, setRecentAlerts] = useState<EstateAlert[]>([]);
@@ -59,32 +64,16 @@ export default function HomeScreen() {
     );
   };
 
-  const handleComplaintsAlert = () => {
-    Alert.alert(
-      '📝 FILE COMPLAINT',
-      'Report noise complaints, maintenance issues, or community concerns.',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'FILE COMPLAINT',
-          onPress: () => Alert.alert('Complaints', 'Complaints feature coming soon!'),
-        },
-      ]
-    );
+  const navigateToReports = () => {
+    navigation.navigate('Reports');
   };
 
-  const handleReportsAlert = () => {
-    Alert.alert(
-      '📊 SUBMIT REPORT',
-      'Submit incident reports, maintenance requests, or general feedback.',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'SUBMIT REPORT',
-          onPress: () => Alert.alert('Reports', 'Reports feature coming soon!'),
-        },
-      ]
-    );
+  const navigateToComplaints = () => {
+    navigation.navigate('Reports'); // Since we renamed Complaints to Reports
+  };
+
+  const navigateToCommunity = () => {
+    navigation.navigate('Community');
   };
 
   const sendAlert = async (type: 'security' | 'emergency' | 'medical') => {
@@ -163,14 +152,6 @@ export default function HomeScreen() {
   const securityGradient = isDark 
     ? ['#1e293b', '#334155'] 
     : ['#f1f5f9', '#e2e8f0'];
-  
-  const complaintsGradient = isDark 
-    ? ['#0f172a', '#1e293b'] 
-    : ['#f8fafc', '#f1f5f9'];
-  
-  const reportsGradient = isDark 
-    ? ['#111827', '#1f2937'] 
-    : ['#f9fafb', '#f3f4f6'];
 
   return (
     <Screen>
@@ -217,7 +198,7 @@ export default function HomeScreen() {
             </View>
           </GlassCard>
 
-          {/* Main Action Buttons */}
+          {/* Main Action Section */}
           <View style={styles.actionsSection}>
             <Text style={[styles.sectionTitle, { color: theme.text }]}>
               Security Services
@@ -258,60 +239,71 @@ export default function HomeScreen() {
               </TouchableOpacity>
             </View>
 
-            {/* Secondary Buttons Row */}
-            <View style={styles.secondaryButtonsContainer}>
-              {/* Complaints Button */}
-              <TouchableOpacity
-                style={styles.secondaryButton}
-                onPress={handleComplaintsAlert}
-                activeOpacity={0.8}
+            {/* Glass Morphism Container Bar for Secondary Actions */}
+            <GlassCard intensity="medium" style={styles.secondaryActionsContainer}>
+              <LinearGradient
+                colors={isDark ? ['rgba(255,255,255,0.03)', 'rgba(255,255,255,0.08)'] : ['rgba(0,0,0,0.02)', 'rgba(0,0,0,0.05)']}
+                style={styles.secondaryActionsGradient}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
               >
-                <LinearGradient
-                  colors={complaintsGradient}
-                  style={styles.secondaryButtonGradient}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
-                >
-                  <View style={[styles.secondaryButtonBorder, { borderColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)' }]}>
-                    <View style={[styles.secondaryButtonIconContainer, { backgroundColor: theme.warning + '15' }]}>
-                      <Ionicons name="document-text" size={24} color={theme.warning} />
-                    </View>
-                    <Text style={[styles.secondaryButtonText, { color: theme.text }]}>
-                      Complaints
-                    </Text>
-                    <Text style={[styles.secondaryButtonSubtext, { color: theme.textSecondary }]}>
-                      File Issue
-                    </Text>
-                  </View>
-                </LinearGradient>
-              </TouchableOpacity>
+                <View style={styles.secondaryActionsContent}>
+                  <Text style={[styles.secondaryActionsTitle, { color: theme.textSecondary }]}>
+                    Quick Actions
+                  </Text>
+                  
+                  <View style={styles.secondaryButtonsRow}>
+                    {/* Reports Button */}
+                    <TouchableOpacity
+                      style={styles.compactButton}
+                      onPress={navigateToReports}
+                      activeOpacity={0.8}
+                    >
+                      <View style={[styles.compactButtonContent, { backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)' }]}>
+                        <View style={[styles.compactButtonIcon, { backgroundColor: theme.info + '15' }]}>
+                          <Ionicons name="bar-chart" size={20} color={theme.info} />
+                        </View>
+                        <Text style={[styles.compactButtonText, { color: theme.text }]}>
+                          Reports
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
 
-              {/* Reports Button */}
-              <TouchableOpacity
-                style={styles.secondaryButton}
-                onPress={handleReportsAlert}
-                activeOpacity={0.8}
-              >
-                <LinearGradient
-                  colors={reportsGradient}
-                  style={styles.secondaryButtonGradient}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
-                >
-                  <View style={[styles.secondaryButtonBorder, { borderColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)' }]}>
-                    <View style={[styles.secondaryButtonIconContainer, { backgroundColor: theme.info + '15' }]}>
-                      <Ionicons name="bar-chart" size={24} color={theme.info} />
-                    </View>
-                    <Text style={[styles.secondaryButtonText, { color: theme.text }]}>
-                      Reports
-                    </Text>
-                    <Text style={[styles.secondaryButtonSubtext, { color: theme.textSecondary }]}>
-                      Submit Report
-                    </Text>
+                    {/* Complaints Button */}
+                    <TouchableOpacity
+                      style={styles.compactButton}
+                      onPress={navigateToComplaints}
+                      activeOpacity={0.8}
+                    >
+                      <View style={[styles.compactButtonContent, { backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)' }]}>
+                        <View style={[styles.compactButtonIcon, { backgroundColor: theme.warning + '15' }]}>
+                          <Ionicons name="document-text" size={20} color={theme.warning} />
+                        </View>
+                        <Text style={[styles.compactButtonText, { color: theme.text }]}>
+                          Complaints
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+
+                    {/* Community Button */}
+                    <TouchableOpacity
+                      style={styles.compactButton}
+                      onPress={navigateToCommunity}
+                      activeOpacity={0.8}
+                    >
+                      <View style={[styles.compactButtonContent, { backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)' }]}>
+                        <View style={[styles.compactButtonIcon, { backgroundColor: theme.success + '15' }]}>
+                          <Ionicons name="people-circle" size={20} color={theme.success} />
+                        </View>
+                        <Text style={[styles.compactButtonText, { color: theme.text }]}>
+                          Community
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
                   </View>
-                </LinearGradient>
-              </TouchableOpacity>
-            </View>
+                </View>
+              </LinearGradient>
+            </GlassCard>
           </View>
 
           {/* Recent Activity with enhanced glass cards */}
@@ -359,21 +351,21 @@ export default function HomeScreen() {
             </Text>
             <View style={styles.estateInfo}>
               <View style={styles.estateInfoItem}>
-                <Ionicons name="location" size={16} color={theme.primary} />
+                <Ionicons name="time" size={16} color={theme.textSecondary} />
                 <Text style={[styles.estateInfoText, { color: theme.textSecondary }]}>
-                  Seren Residential Estate
+                  Security: 24/7 Active Monitoring
                 </Text>
               </View>
               <View style={styles.estateInfoItem}>
-                <Ionicons name="call" size={16} color={theme.primary} />
+                <Ionicons name="call" size={16} color={theme.textSecondary} />
                 <Text style={[styles.estateInfoText, { color: theme.textSecondary }]}>
-                  Emergency: 10111
+                  Emergency: +27 11 234 5678
                 </Text>
               </View>
               <View style={styles.estateInfoItem}>
-                <Ionicons name="time" size={16} color={theme.primary} />
+                <Ionicons name="mail" size={16} color={theme.textSecondary} />
                 <Text style={[styles.estateInfoText, { color: theme.textSecondary }]}>
-                  Security: 24/7 Active
+                  Management: info@serenresidential.co.za
                 </Text>
               </View>
             </View>
@@ -393,10 +385,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   headerCard: {
-    marginTop: 10,
-    marginBottom: 16,
+    marginTop: 20,
+    marginBottom: 20,
     paddingHorizontal: 20,
-    paddingVertical: 16,
+    paddingVertical: 20,
   },
   header: {
     flexDirection: 'row',
@@ -463,7 +455,7 @@ const styles = StyleSheet.create({
   },
   mainButtonContainer: {
     alignItems: 'center',
-    marginBottom: 32,
+    marginBottom: 24,
   },
   mainButton: {
     width: 200,
@@ -502,46 +494,53 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     textAlign: 'center',
   },
-  secondaryButtonsContainer: {
-    flexDirection: 'row',
-    gap: 16,
-    justifyContent: 'center',
+  // Glass Morphism Container Bar Styles
+  secondaryActionsContainer: {
+    marginBottom: 8,
+    overflow: 'hidden',
+    borderRadius: 20,
   },
-  secondaryButton: {
-    width: 140,
-    height: 140,
+  secondaryActionsGradient: {
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+    borderRadius: 20,
   },
-  secondaryButtonGradient: {
-    width: 140,
-    height: 140,
-    borderRadius: 70,
-    padding: 2,
-  },
-  secondaryButtonBorder: {
-    flex: 1,
-    borderRadius: 68,
-    borderWidth: 1,
-    justifyContent: 'center',
+  secondaryActionsContent: {
     alignItems: 'center',
-    paddingHorizontal: 16,
   },
-  secondaryButtonIconContainer: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+  secondaryActionsTitle: {
+    fontSize: 14,
+    fontWeight: '600',
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+  secondaryButtonsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    gap: 12,
+  },
+  compactButton: {
+    flex: 1,
+  },
+  compactButtonContent: {
+    paddingVertical: 16,
+    paddingHorizontal: 12,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  compactButtonIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 8,
   },
-  secondaryButtonText: {
-    fontSize: 14,
+  compactButtonText: {
+    fontSize: 13,
     fontWeight: '600',
-    marginBottom: 2,
-    textAlign: 'center',
-  },
-  secondaryButtonSubtext: {
-    fontSize: 12,
-    fontWeight: '500',
     textAlign: 'center',
   },
   alertsSection: {
