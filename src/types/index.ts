@@ -108,6 +108,7 @@ export interface CommunityEvent {
 export type RootTabParamList = {
   Home: undefined;
   Reports: undefined;
+  PersonalComplaints: undefined;
   Community: undefined;
   Profile: undefined;
 }; 

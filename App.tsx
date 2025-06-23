@@ -8,6 +8,7 @@ import { Platform } from 'react-native';
 import { ThemeProvider, useTheme } from './src/context/ThemeContext';
 import HomeScreen from './src/screens/HomeScreen';
 import ComplaintsScreen from './src/screens/ComplaintsScreen';
+import PersonalComplaintsScreen from './src/screens/PersonalComplaintsScreen';
 import CommunityScreen from './src/screens/CommunityScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import { RootTabParamList } from './src/types';
@@ -31,6 +32,9 @@ function TabNavigator() {
                 break;
               case 'Reports':
                 iconName = focused ? 'bar-chart' : 'bar-chart-outline';
+                break;
+              case 'PersonalComplaints':
+                iconName = focused ? 'document-text' : 'document-text-outline';
                 break;
               case 'Community':
                 iconName = focused ? 'people-circle' : 'people-circle-outline';
@@ -75,7 +79,7 @@ function TabNavigator() {
           tabBarItemStyle: {
             paddingVertical: 4,
           },
-          tabBarBackground: () => null, // Remove default background
+          tabBarBackground: () => null,
         })}
       >
         <Tab.Screen 
@@ -87,6 +91,11 @@ function TabNavigator() {
           name="Reports" 
           component={ComplaintsScreen} 
           options={{ tabBarLabel: 'Reports' }}
+        />
+        <Tab.Screen 
+          name="PersonalComplaints" 
+          component={PersonalComplaintsScreen} 
+          options={{ tabBarLabel: 'Complaints' }}
         />
         <Tab.Screen 
           name="Community" 

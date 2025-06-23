@@ -157,16 +157,14 @@ export default function ProfileScreen() {
                 onPress={() => setShowSubscriptionScreen(true)}
               >
                 <LinearGradient
-                  colors={subscriptionStatus === 'active' ? [theme.success, theme.success + '80'] : theme.gradientPrimary}
+                  colors={subscriptionStatus === 'active' ? ['#10B981', '#059669'] : ['#8B5CF6', '#7C3AED']}
                   style={styles.quickActionGradient}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
                 >
-                  <Ionicons name="card" size={24} color={theme.textInverse} />
-                  <Text style={[styles.quickActionText, { color: theme.textInverse }]}>
-                    {subscriptionStatus === 'active' ? 'Premium' : 'Upgrade'}
-                  </Text>
+                  <Ionicons name="card" size={20} color="white" />
                 </LinearGradient>
+                <Text style={[styles.quickActionText, { color: theme.text }]}>
+                  {subscriptionStatus === 'active' ? 'Premium' : 'Upgrade'}
+                </Text>
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -174,16 +172,14 @@ export default function ProfileScreen() {
                 onPress={() => Alert.alert('Emergency Contacts', 'Feature coming soon!')}
               >
                 <LinearGradient
-                  colors={[theme.emergency, theme.emergencyLight]}
+                  colors={['#EF4444', '#DC2626']}
                   style={styles.quickActionGradient}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
                 >
-                  <Ionicons name="call" size={24} color={theme.textInverse} />
-                  <Text style={[styles.quickActionText, { color: theme.textInverse }]}>
-                    Emergency
-                  </Text>
+                  <Ionicons name="call" size={20} color="white" />
                 </LinearGradient>
+                <Text style={[styles.quickActionText, { color: theme.text }]}>
+                  Emergency
+                </Text>
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -191,16 +187,14 @@ export default function ProfileScreen() {
                 onPress={() => Alert.alert('Support', 'Contact support feature coming soon!')}
               >
                 <LinearGradient
-                  colors={[theme.info, theme.info + '80']}
+                  colors={['#3B82F6', '#2563EB']}
                   style={styles.quickActionGradient}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
                 >
-                  <Ionicons name="help-circle" size={24} color={theme.textInverse} />
-                  <Text style={[styles.quickActionText, { color: theme.textInverse }]}>
-                    Support
-                  </Text>
+                  <Ionicons name="help-circle" size={20} color="white" />
                 </LinearGradient>
+                <Text style={[styles.quickActionText, { color: theme.text }]}>
+                  Support
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -444,23 +438,35 @@ const styles = StyleSheet.create({
   },
   quickActionsRow: {
     flexDirection: 'row',
-    gap: 12,
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    paddingHorizontal: 10,
   },
   quickActionButton: {
-    flex: 1,
+    width: 80,
+    alignItems: 'center',
+    marginHorizontal: 5,
   },
   quickActionGradient: {
-    borderRadius: 16,
-    paddingVertical: 16,
-    paddingHorizontal: 12,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
     alignItems: 'center',
-    minHeight: 80,
     justifyContent: 'center',
+    marginBottom: 8,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    elevation: 8,
   },
   quickActionText: {
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: '600',
-    marginTop: 8,
+    textAlign: 'center',
   },
   section: {
     marginBottom: 24,

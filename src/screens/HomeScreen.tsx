@@ -69,7 +69,7 @@ export default function HomeScreen() {
   };
 
   const navigateToComplaints = () => {
-    navigation.navigate('Reports'); // Since we renamed Complaints to Reports
+    navigation.navigate('PersonalComplaints');
   };
 
   const navigateToCommunity = () => {
@@ -239,70 +239,70 @@ export default function HomeScreen() {
               </TouchableOpacity>
             </View>
 
-            {/* Glass Morphism Container Bar for Secondary Actions */}
-            <GlassCard intensity="medium" style={styles.secondaryActionsContainer}>
-              <LinearGradient
-                colors={isDark ? ['rgba(255,255,255,0.03)', 'rgba(255,255,255,0.08)'] : ['rgba(0,0,0,0.02)', 'rgba(0,0,0,0.05)']}
-                style={styles.secondaryActionsGradient}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-              >
-                <View style={styles.secondaryActionsContent}>
-                  <Text style={[styles.secondaryActionsTitle, { color: theme.textSecondary }]}>
-                    Quick Actions
+            {/* Circular Quick Actions */}
+            <GlassCard intensity="medium" style={styles.circularActionsContainer}>
+              <Text style={[styles.circularActionsTitle, { color: theme.text }]}>
+                Quick Actions
+              </Text>
+              
+              <View style={styles.circularButtonsContainer}>
+                {/* Reports Button */}
+                <TouchableOpacity
+                  style={styles.circularButton}
+                  onPress={navigateToReports}
+                  activeOpacity={0.7}
+                >
+                  <LinearGradient
+                    colors={[theme.info + '20', theme.info + '10']}
+                    style={styles.circularButtonGradient}
+                  >
+                    <View style={[styles.circularButtonIcon, { backgroundColor: theme.info }]}>
+                      <Ionicons name="bar-chart" size={22} color="white" />
+                    </View>
+                  </LinearGradient>
+                  <Text style={[styles.circularButtonText, { color: theme.text }]}>
+                    Reports
                   </Text>
-                  
-                  <View style={styles.secondaryButtonsRow}>
-                    {/* Reports Button */}
-                    <TouchableOpacity
-                      style={styles.compactButton}
-                      onPress={navigateToReports}
-                      activeOpacity={0.8}
-                    >
-                      <View style={[styles.compactButtonContent, { backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)' }]}>
-                        <View style={[styles.compactButtonIcon, { backgroundColor: theme.info + '15' }]}>
-                          <Ionicons name="bar-chart" size={20} color={theme.info} />
-                        </View>
-                        <Text style={[styles.compactButtonText, { color: theme.text }]}>
-                          Reports
-                        </Text>
-                      </View>
-                    </TouchableOpacity>
+                </TouchableOpacity>
 
-                    {/* Complaints Button */}
-                    <TouchableOpacity
-                      style={styles.compactButton}
-                      onPress={navigateToComplaints}
-                      activeOpacity={0.8}
-                    >
-                      <View style={[styles.compactButtonContent, { backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)' }]}>
-                        <View style={[styles.compactButtonIcon, { backgroundColor: theme.warning + '15' }]}>
-                          <Ionicons name="document-text" size={20} color={theme.warning} />
-                        </View>
-                        <Text style={[styles.compactButtonText, { color: theme.text }]}>
-                          Complaints
-                        </Text>
-                      </View>
-                    </TouchableOpacity>
+                {/* Complaints Button */}
+                <TouchableOpacity
+                  style={styles.circularButton}
+                  onPress={navigateToComplaints}
+                  activeOpacity={0.7}
+                >
+                  <LinearGradient
+                    colors={[theme.warning + '20', theme.warning + '10']}
+                    style={styles.circularButtonGradient}
+                  >
+                    <View style={[styles.circularButtonIcon, { backgroundColor: theme.warning }]}>
+                      <Ionicons name="document-text" size={22} color="white" />
+                    </View>
+                  </LinearGradient>
+                  <Text style={[styles.circularButtonText, { color: theme.text }]}>
+                    Complaints
+                  </Text>
+                </TouchableOpacity>
 
-                    {/* Community Button */}
-                    <TouchableOpacity
-                      style={styles.compactButton}
-                      onPress={navigateToCommunity}
-                      activeOpacity={0.8}
-                    >
-                      <View style={[styles.compactButtonContent, { backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)' }]}>
-                        <View style={[styles.compactButtonIcon, { backgroundColor: theme.success + '15' }]}>
-                          <Ionicons name="people-circle" size={20} color={theme.success} />
-                        </View>
-                        <Text style={[styles.compactButtonText, { color: theme.text }]}>
-                          Community
-                        </Text>
-                      </View>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              </LinearGradient>
+                {/* Community Button */}
+                <TouchableOpacity
+                  style={styles.circularButton}
+                  onPress={navigateToCommunity}
+                  activeOpacity={0.7}
+                >
+                  <LinearGradient
+                    colors={[theme.success + '20', theme.success + '10']}
+                    style={styles.circularButtonGradient}
+                  >
+                    <View style={[styles.circularButtonIcon, { backgroundColor: theme.success }]}>
+                      <Ionicons name="people-circle" size={22} color="white" />
+                    </View>
+                  </LinearGradient>
+                  <Text style={[styles.circularButtonText, { color: theme.text }]}>
+                    Community
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </GlassCard>
           </View>
 
@@ -494,54 +494,60 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     textAlign: 'center',
   },
-  // Glass Morphism Container Bar Styles
-  secondaryActionsContainer: {
+  // Circular Quick Actions Styles
+  circularActionsContainer: {
     marginBottom: 8,
-    overflow: 'hidden',
-    borderRadius: 20,
-  },
-  secondaryActionsGradient: {
     paddingHorizontal: 20,
-    paddingVertical: 20,
-    borderRadius: 20,
-  },
-  secondaryActionsContent: {
+    paddingVertical: 24,
     alignItems: 'center',
   },
-  secondaryActionsTitle: {
-    fontSize: 14,
+  circularActionsTitle: {
+    fontSize: 18,
     fontWeight: '600',
-    marginBottom: 16,
+    marginBottom: 20,
     textAlign: 'center',
   },
-  secondaryButtonsRow: {
+  circularButtonsContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-    gap: 12,
-  },
-  compactButton: {
-    flex: 1,
-  },
-  compactButtonContent: {
-    paddingVertical: 16,
-    paddingHorizontal: 12,
-    borderRadius: 16,
+    justifyContent: 'space-around',
     alignItems: 'center',
-    justifyContent: 'center',
+    paddingHorizontal: 10,
+    marginTop: 10,
   },
-  compactButtonIcon: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+  circularButton: {
+    alignItems: 'center',
+    width: 80,
+    marginHorizontal: 5,
+  },
+  circularButtonGradient: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 8,
   },
-  compactButtonText: {
-    fontSize: 13,
+  circularButtonIcon: {
+    width: 46,
+    height: 46,
+    borderRadius: 23,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  circularButtonText: {
+    fontSize: 11,
     fontWeight: '600',
     textAlign: 'center',
+    maxWidth: 80,
+    lineHeight: 14,
   },
   alertsSection: {
     marginBottom: 32,
