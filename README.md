@@ -1,100 +1,14 @@
-# 🏘️ Seren Residential - Estate Security Platform
+# 📱 Seren Residential App
 
-A comprehensive residential estate management and emergency response application built with React Native and Firebase. Designed for secure estates with subscription-based premium features.
+A comprehensive React Native mobile application for residential estate management, providing residents with convenient access to community services, complaint filing, subscription management, and more.
 
-## 🚀 Features
-
-### 🔔 Emergency Alert System
-- **SOS Emergency Button** - Life-threatening situations with priority response
-- **Medical Emergency Alerts** - Health emergencies with automated response
-- **Real-time Location Sharing** - GPS coordinates sent to control room
-- **Alert Status Tracking** - Monitor response status (Open → In Progress → Resolved)
-- **Response Time Monitoring** - Track emergency response times
-
-### 📢 Estate Complaints System
-- **Complaint Categories** - Noise, Parking, Maintenance, Security, Pets, Garbage, Other
-- **Image Upload Support** - Visual evidence for complaints
-- **Real-time Status Updates** - Track complaint resolution progress
-- **Complaint History** - View all submitted complaints
-- **Estate Management Integration** - Direct routing to management team
-
-### 💳 Subscription Management
-- **R25/Month Premium Subscription** - Affordable monthly pricing
-- **Payment Processing** - Secure card payments (Stripe integration ready)
-- **Subscription Status Tracking** - Active, Inactive, Pending states
-- **Premium Feature Access Control** - Feature gating for non-subscribers
-- **Admin Role Bypass** - Admins access all features without subscription
-
-### 🏠 Estate Information
-- **24/7 Control Room Monitoring** - Professional security oversight
-- **Emergency Contact Directory** - Quick access to essential contacts
-- **Estate Security Status** - Real-time security monitoring display
-- **Unit Management** - Resident unit tracking and verification
-
-### 🎨 User Experience
-- **Light/Dark Theme Toggle** - Customizable interface
-- **Intuitive Navigation** - Tab-based navigation with clear icons
-- **Real-time Updates** - Live status updates for alerts and complaints
-- **Accessibility** - Following React Native accessibility guidelines
-
-## 🏗️ Technical Architecture
-
-### Frontend (React Native)
-- **Expo SDK** - Cross-platform development framework
-- **TypeScript** - Type-safe development
-- **Firebase SDK** - Real-time database and authentication
-- **Navigation** - React Navigation v6 with tab navigation
-- **State Management** - React Context for theme and user state
-- **UI Components** - Custom components with consistent design system
-
-### Backend (Firebase)
-```
-📁 Firestore Collections:
-├── users/              # User profiles and subscription status
-├── estate_alerts/      # Emergency and medical alerts
-├── complaints/         # Estate complaints and issues
-├── subscriptions/      # Payment and subscription data
-└── assignments/        # Alert assignments to security staff
-```
-
-### Services Layer
-- **AlertService** - Emergency alert management
-- **ComplaintService** - Complaint submission and tracking
-- **SubscriptionService** - Payment and subscription handling
-- **Firebase Config** - Centralized Firebase configuration
-
-## 📱 App Structure
-
-```
-src/
-├── components/         # Reusable UI components
-│   └── Screen.tsx     # Base screen wrapper
-├── context/           # React Context providers
-│   └── ThemeContext.tsx
-├── screens/           # Application screens
-│   ├── HomeScreen.tsx          # Emergency alerts and estate info
-│   ├── ComplaintsScreen.tsx    # Complaint submission and tracking
-│   ├── ContactsScreen.tsx      # Emergency contacts
-│   ├── ProfileScreen.tsx       # User profile and settings
-│   └── SubscriptionScreen.tsx  # Subscription management
-├── services/          # Business logic services
-│   ├── firebase.ts
-│   ├── AlertService.ts
-│   ├── ComplaintService.ts
-│   └── SubscriptionService.ts
-├── theme/            # Design system
-│   └── colors.ts
-└── types/            # TypeScript definitions
-    └── index.ts
-```
-
-## 🔧 Setup Instructions
+## 🚀 Quick Start
 
 ### Prerequisites
-- Node.js 18+ 
-- npm or yarn
+- Node.js 18+
 - Expo CLI
-- Firebase project with Firestore enabled
+- iOS Simulator or Android Emulator (optional)
+- Expo Go app on your mobile device
 
 ### Installation
 
@@ -109,180 +23,224 @@ src/
    npm install
    ```
 
-3. **Configure Firebase**
-   - Create a new Firebase project
-   - Enable Firestore Database
-   - Enable Firebase Authentication
-   - Enable Firebase Storage
-   - Update `src/services/firebase.ts` with your config:
-
-   ```typescript
-   const firebaseConfig = {
-     apiKey: "your-api-key",
-     authDomain: "your-project.firebaseapp.com",
-     projectId: "your-project-id",
-     storageBucket: "your-project.appspot.com",
-     messagingSenderId: "your-sender-id",
-     appId: "your-app-id"
-   };
-   ```
-
-4. **Start the development server**
+3. **Start the development server**
    ```bash
-   npm start
+   npx expo start
    ```
 
-5. **Run on device/simulator**
-   - **iOS**: Press `i` or scan QR code with Camera app
-   - **Android**: Press `a` or scan QR code with Expo Go
-   - **Web**: Press `w` to open in browser
-
-## 🔐 Firebase Security Rules
-
-### Firestore Rules
-```javascript
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    // Users can read/write their own data
-    match /users/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
-    }
-    
-    // Users can create alerts, admins can read all
-    match /estate_alerts/{alertId} {
-      allow create: if request.auth != null;
-      allow read, update: if request.auth != null && 
-        (request.auth.uid == resource.data.uid || 
-         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin');
-    }
-    
-    // Similar rules for complaints
-    match /complaints/{complaintId} {
-      allow create: if request.auth != null;
-      allow read, update: if request.auth != null && 
-        (request.auth.uid == resource.data.uid || 
-         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin');
-    }
-    
-    // Subscriptions - users can read their own, admins can read all
-    match /subscriptions/{subscriptionId} {
-      allow read, write: if request.auth != null && 
-        (request.auth.uid == resource.data.uid || 
-         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin');
-    }
-  }
-}
-```
-
-## 💰 Subscription System
-
-### Pricing
-- **Free Plan**: Basic emergency contacts
-- **Premium Plan**: R25/month
-  - Emergency alert system
-  - Medical emergency alerts
-  - Complaint management
-  - Real-time tracking
-  - Priority support
-
-### Payment Integration
-Ready for integration with:
-- **Stripe** - Credit/debit card processing
-- **RevenueCat** - Subscription management
-- **PayFast** - South African payment gateway
-
-## 🎯 User Roles
-
-### Resident
-- Submit emergency alerts
-- File complaints
-- View personal alert/complaint history
-- Manage subscription
-- Access emergency contacts
-
-### Admin
-- View all alerts and complaints
-- Assign incidents to security staff
-- Update alert/complaint status
-- Access control room dashboard
-- Bypass subscription requirements
-
-## 🚀 Deployment
-
-### Mobile App Deployment
-```bash
-# Build for iOS
-npx expo build:ios
-
-# Build for Android
-npx expo build:android
-
-# Submit to app stores
-npx expo submit
-```
-
-### Web Dashboard (Future)
-The control room dashboard will be a separate React web application for estate management and security teams.
-
-## 🔄 Development Workflow
-
-### Code Quality
-- TypeScript for type safety
-- ESLint for code quality
-- Prettier for code formatting
-- Git hooks for pre-commit checks
-
-### Testing Strategy
-- Unit tests for services
-- Integration tests for Firebase
-- E2E tests for critical flows
-- Manual testing on multiple devices
-
-## 📊 Analytics & Monitoring
-
-### Metrics Tracked
-- Emergency response times
-- Complaint resolution rates
-- User engagement
-- Subscription conversion rates
-- App performance metrics
-
-## 🌟 Future Enhancements
-
-### Phase 2 Features
-- Multi-estate management
-- Visitor access control
-- Biometric integration
-- IoT device connectivity
-- Advanced reporting dashboard
-
-### Integrations
-- CCTV system integration
-- Access control systems
-- Intercom systems
-- Smart home devices
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
-
-## 📄 License
-
-This project is proprietary software for Seren Residential estates.
-
-## 📞 Support
-
-For technical support or questions:
-- **Email**: support@serenresidential.co.za
-- **Phone**: +27 11 123 4567
-- **Hours**: 24/7 Emergency Support
+4. **Run the app**
+   - Scan QR code with Expo Go app
+   - Press `i` for iOS Simulator
+   - Press `a` for Android Emulator
+   - Press `w` for web preview
 
 ---
 
-**Seren Residential** - Professional Estate Security Platform
-*Keeping South African estates safe, secure, and connected.* 
+## 📱 App Features
+
+### 🏠 Home Dashboard
+- Quick access to core features
+- Estate announcements and updates
+- Weather information
+- Emergency contacts
+
+### 📋 Reports & Complaints
+- **Infrastructure Reports:** Report issues with lighting, gates, pools, etc.
+- **Personal Complaints:** File noise, parking, security complaints
+- Photo upload capability
+- Real-time status tracking
+- Historical complaint view
+
+### 👥 Community
+- Estate clubs and activities
+- Community events calendar
+- Social features and announcements
+- Meeting schedules
+
+### 💳 Subscription Management
+- View current subscription plan
+- Payment history
+- Billing information
+- Plan upgrade options
+
+### 👤 Profile
+- Personal information management
+- App settings and preferences
+- Account security
+- Support and help
+
+---
+
+## 🎨 Design Features
+
+- **Glass Morphism UI:** Modern glass-effect design
+- **Circular Action Buttons:** Intuitive navigation
+- **Dark/Light Theme Support:** Automatic theme detection
+- **Responsive Design:** Optimized for all screen sizes
+- **Smooth Animations:** Enhanced user experience
+
+---
+
+## 🔧 Tech Stack
+
+- **Framework:** React Native with Expo
+- **Language:** TypeScript
+- **Navigation:** React Navigation (Bottom Tabs)
+- **Styling:** StyleSheet with LinearGradient
+- **Backend:** Firebase Firestore
+- **Authentication:** Firebase Auth
+- **Image Handling:** Expo Image Picker
+- **Notifications:** Expo Notifications
+- **Location:** Expo Location
+
+---
+
+## 🗂️ Project Structure
+
+```
+src/
+├── components/              # Reusable UI components
+│   ├── GlassCard.tsx       # Glass morphism card component
+│   └── Screen.tsx          # Base screen wrapper
+├── context/                # React context providers
+│   └── ThemeContext.tsx    # Theme management
+├── screens/                # App screens
+│   ├── auth/               # Authentication screens
+│   ├── dashboard/          # Dashboard components
+│   ├── HomeScreen.tsx      # Main home screen
+│   ├── ComplaintsScreen.tsx # Infrastructure reports
+│   ├── PersonalComplaintsScreen.tsx # Personal complaints
+│   ├── CommunityScreen.tsx # Community features
+│   ├── SubscriptionScreen.tsx # Subscription management
+│   └── ProfileScreen.tsx   # User profile
+├── services/               # Business logic & API
+│   ├── firebase.ts         # Firebase configuration
+│   ├── ComplaintService.ts # Complaint management
+│   ├── SubscriptionService.ts # Subscription logic
+│   └── AlertService.ts     # Alert utilities
+├── theme/                  # Design system
+│   └── colors.ts           # Color definitions
+└── types/                  # TypeScript definitions
+    └── index.ts            # Type definitions
+```
+
+---
+
+## 🔥 Firebase Integration
+
+The app uses Firebase for backend services:
+
+- **Firestore:** Real-time database for complaints, reports, and user data
+- **Authentication:** User login and account management
+- **Storage:** Image uploads for complaint attachments
+- **Cloud Functions:** Background processing (if needed)
+
+### Firebase Configuration
+Ensure your `src/services/firebase.ts` is properly configured with your Firebase project credentials.
+
+---
+
+## 🧪 Testing
+
+### Manual Testing Checklist
+
+**✅ Navigation**
+- [ ] Bottom tab navigation works
+- [ ] Screen transitions are smooth
+- [ ] Back navigation functions properly
+
+**✅ Features**
+- [ ] Complaint submission works
+- [ ] Photo upload functions
+- [ ] Status updates reflect correctly
+- [ ] Community events display
+- [ ] Profile updates save
+
+**✅ UI/UX**
+- [ ] Glass morphism effects render correctly
+- [ ] Circular buttons are properly spaced
+- [ ] Dark/light theme switching works
+- [ ] Responsive design on different screen sizes
+
+**✅ Performance**
+- [ ] App loads quickly
+- [ ] Smooth scrolling and animations
+- [ ] No memory leaks
+- [ ] Efficient image loading
+
+---
+
+## 🚀 Deployment
+
+### Expo Build Service (EAS)
+
+1. **Install EAS CLI**
+   ```bash
+   npm install -g eas-cli
+   ```
+
+2. **Configure EAS**
+   ```bash
+   eas build:configure
+   ```
+
+3. **Build for iOS**
+   ```bash
+   eas build --platform ios
+   ```
+
+4. **Build for Android**
+   ```bash
+   eas build --platform android
+   ```
+
+### App Store Distribution
+- Follow Expo's guide for App Store submission
+- Ensure all app store requirements are met
+- Configure app icons and splash screens
+
+---
+
+## 🆘 Troubleshooting
+
+### Common Issues
+
+**Metro bundler errors:**
+```bash
+npx expo start --clear
+```
+
+**iOS Simulator not opening:**
+```bash
+# Check Xcode installation
+xcrun simctl list devices
+```
+
+**Android build issues:**
+```bash
+# Clear cache
+npx expo start --clear
+cd android && ./gradlew clean
+```
+
+**Package conflicts:**
+```bash
+# Reset packages
+rm -rf node_modules package-lock.json
+npm install
+```
+
+---
+
+## 📞 Support
+
+For technical support or feature requests:
+- **Issues:** Create GitHub issue with detailed description
+- **Documentation:** Check Expo and React Native docs
+- **Community:** Join React Native community forums
+
+---
+
+**Last Updated:** December 2024  
+**Version:** 1.0.0  
+**Compatibility:** iOS 13+, Android 8+, Expo SDK 53 
