@@ -15,7 +15,9 @@ import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import Screen from '../components/Screen';
 import GlassCard from '../components/GlassCard';
 import { useTheme } from '../context/ThemeContext';
+import { useAuth } from '../context/AuthContext';
 import AlertService from '../services/AlertService';
+import DashboardService from '../services/DashboardService';
 import { EstateAlert, RootTabParamList } from '../types';
 
 type HomeScreenNavigationProp = BottomTabNavigationProp<RootTabParamList, 'Home'>;
@@ -23,29 +25,37 @@ type HomeScreenNavigationProp = BottomTabNavigationProp<RootTabParamList, 'Home'
 export default function HomeScreen() {
   const navigation = useNavigation<HomeScreenNavigationProp>();
   const { theme, isDark, toggleTheme } = useTheme();
+  const { user, estate, signOut } = useAuth();
   const [isEmergencyActive, setIsEmergencyActive] = useState(false);
   const [recentAlerts, setRecentAlerts] = useState<EstateAlert[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [announcements, setAnnouncements] = useState<any[]>([]);
 
   const alertService = AlertService.getInstance();
-
-  // Mock user info - in real app, get from Auth context
-  const mockUser = {
-    uid: 'mock-user-123',
-    name: 'John Doe',
-    unitNumber: 'Unit 42'
-  };
+  const dashboardService = DashboardService.getInstance();
 
   useEffect(() => {
     loadRecentAlerts();
+    loadAnnouncements();
   }, []);
 
   const loadRecentAlerts = async () => {
+    if (!user) return;
     try {
-      const alerts = await alertService.getUserAlerts(mockUser.uid);
+      const alerts = await alertService.getUserAlerts(user.uid);
       setRecentAlerts(alerts.slice(0, 3)); // Show only recent 3 alerts
     } catch (error) {
       console.error('Error loading alerts:', error);
+    }
+  };
+
+  const loadAnnouncements = async () => {
+    if (!user) return;
+    try {
+      const dashboardAnnouncements = await dashboardService.getAnnouncements(user.uid);
+      setAnnouncements(dashboardAnnouncements.slice(0, 2)); // Show only recent 2 announcements
+    } catch (error) {
+      console.error('Error loading announcements:', error);
     }
   };
 
@@ -85,15 +95,15 @@ export default function HomeScreen() {
     try {
       const alertId = await alertService.sendEmergencyAlert(
         type,
-        `${type} alert from ${mockUser.unitNumber} - immediate response required`,
-        mockUser
+        `${type} alert from ${user?.unitNumber} - immediate response required`,
+        user
       );
 
       if (alertId) {
         const alertType = type === 'security' ? 'Security' : type === 'emergency' ? 'SOS' : 'Medical';
         Alert.alert(
           `🚨 ${alertType.toUpperCase()} ALERT SENT`,
-          `${alertType} alert has been sent to estate security from ${mockUser.unitNumber}.\n\n🚨 Priority Response: IMMEDIATE\n📍 Location: Shared with control room\n\n⏱️ Security response dispatched`,
+          `${alertType} alert has been sent to ${estate?.name} security from ${user?.unitNumber}.\n\n🚨 Priority Response: IMMEDIATE\n📍 Location: Shared with control room\n\n⏱️ Security response dispatched`,
           [
             { 
               text: 'OK', 
@@ -168,7 +178,7 @@ export default function HomeScreen() {
                   Good Morning 👋
                 </Text>
                 <Text style={[styles.unitText, { color: theme.textSecondary }]}>
-                  {mockUser.unitNumber} • Seren Residential
+                  {user?.unitNumber} • {estate?.name}
                 </Text>
               </View>
               <TouchableOpacity onPress={toggleTheme} style={[styles.themeButton, { backgroundColor: theme.glass }]}>

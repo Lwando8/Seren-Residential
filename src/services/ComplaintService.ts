@@ -30,7 +30,7 @@ class ComplaintService {
     type: ComplaintType,
     description: string,
     imageUri?: string,
-    userInfo?: { uid: string; name: string; unitNumber: string }
+    userInfo?: { uid: string; name: string; unitNumber: string; estateId: string }
   ): Promise<string | null> {
     try {
       let imageURL: string | undefined;
@@ -40,9 +40,10 @@ class ComplaintService {
         imageURL = await this.uploadImage(imageUri);
       }
 
-      // Create complaint document
+      // Create complaint document with estate isolation
       const complaintData = {
         uid: userInfo?.uid || 'demo-user',
+        estateId: userInfo?.estateId || 'demo-estate-1',
         userName: userInfo?.name || 'Demo User',
         unitNumber: userInfo?.unitNumber || 'Demo Unit',
         type,
@@ -85,13 +86,26 @@ class ComplaintService {
   }
 
   // Get complaints for a specific user (with fallback)
-  async getUserComplaints(uid: string): Promise<Complaint[]> {
+  async getUserComplaints(uid: string, estateId?: string): Promise<Complaint[]> {
     try {
-      const q = query(
-        collection(db, 'complaints'),
-        where('uid', '==', uid),
-        orderBy('timestamp', 'desc')
-      );
+      let q;
+      
+      if (estateId) {
+        // Filter by both user and estate for data isolation
+        q = query(
+          collection(db, 'complaints'),
+          where('uid', '==', uid),
+          where('estateId', '==', estateId),
+          orderBy('timestamp', 'desc')
+        );
+      } else {
+        // Fallback to just user ID
+        q = query(
+          collection(db, 'complaints'),
+          where('uid', '==', uid),
+          orderBy('timestamp', 'desc')
+        );
+      }
       
       const querySnapshot = await getDocs(q);
       const complaints: Complaint[] = [];
@@ -116,6 +130,7 @@ class ComplaintService {
         {
           id: 'demo-complaint-1',
           uid: uid,
+          estateId: estateId || 'demo-estate-1',
           userName: 'Demo User',
           unitNumber: 'Unit 42',
           type: 'noise',
@@ -126,6 +141,7 @@ class ComplaintService {
         {
           id: 'demo-complaint-2',
           uid: uid,
+          estateId: estateId || 'demo-estate-1',
           userName: 'Demo User',
           unitNumber: 'Unit 42',
           type: 'parking',
@@ -137,13 +153,25 @@ class ComplaintService {
     }
   }
 
-  // Get all complaints (for admin dashboard)
-  async getAllComplaints(): Promise<Complaint[]> {
+  // Get all complaints for a specific estate (for admin dashboard)
+  async getAllComplaints(estateId?: string): Promise<Complaint[]> {
     try {
-      const q = query(
-        collection(db, 'complaints'),
-        orderBy('timestamp', 'desc')
-      );
+      let q;
+      
+      if (estateId) {
+        // Filter by estate for data isolation
+        q = query(
+          collection(db, 'complaints'),
+          where('estateId', '==', estateId),
+          orderBy('timestamp', 'desc')
+        );
+      } else {
+        // Fallback to all complaints (super admin only)
+        q = query(
+          collection(db, 'complaints'),
+          orderBy('timestamp', 'desc')
+        );
+      }
       
       const querySnapshot = await getDocs(q);
       const complaints: Complaint[] = [];

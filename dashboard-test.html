@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seren Residential Dashboard - Test Interface</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            opacity: 0.8;
+            font-size: 1.1rem;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .card h3 {
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 14px;
+        }
+        
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .btn {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: transform 0.2s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(45deg, #f44336, #d32f2f);
+        }
+        
+        .btn-warning {
+            background: linear-gradient(45deg, #ff9800, #f57c00);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+        
+        .activity-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .activity-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .activity-time {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+        
+        .priority-high {
+            border-left-color: #f44336;
+        }
+        
+        .priority-medium {
+            border-left-color: #ff9800;
+        }
+        
+        .priority-low {
+            border-left-color: #4CAF50;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .status-online {
+            background: rgba(76, 175, 80, 0.3);
+            color: #4CAF50;
+        }
+        
+        .status-offline {
+            background: rgba(244, 67, 54, 0.3);
+            color: #f44336;
+        }
+        
+        .connection-status {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="connection-status status-offline" id="connectionStatus">
+        🔴 Disconnected
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>🏠 Seren Residential Dashboard</h1>
+            <p>Real-time Estate Management & Mobile App Testing</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-value" id="totalResidents">247</div>
+                <div class="stat-label">Total Residents</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="activeComplaints">12</div>
+                <div class="stat-label">Active Complaints</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="securityAlerts">3</div>
+                <div class="stat-label">Security Alerts</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="systemHealth">99.8%</div>
+                <div class="stat-label">System Health</div>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <!-- Send Announcement Card -->
+            <div class="card">
+                <h3>📢 Send Announcement to Mobile App</h3>
+                <form id="announcementForm">
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" id="announcementTitle" placeholder="e.g., Maintenance Notice" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Message</label>
+                        <textarea id="announcementMessage" rows="3" placeholder="Enter announcement details..." required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Priority</label>
+                        <select id="announcementPriority">
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                            <option value="urgent">Urgent</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn">Send to All Residents</button>
+                </form>
+            </div>
+
+            <!-- Complaint Management Card -->
+            <div class="card">
+                <h3>🛠️ Complaint Management</h3>
+                <div class="form-group">
+                    <label>Complaint ID</label>
+                    <input type="text" id="complaintId" placeholder="Enter complaint ID">
+                </div>
+                <div class="form-group">
+                    <label>Update Status</label>
+                    <select id="complaintStatus">
+                        <option value="open">Open</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="resolved">Resolved</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Admin Notes</label>
+                    <textarea id="complaintNotes" rows="2" placeholder="Add notes..."></textarea>
+                </div>
+                <button onclick="updateComplaint()" class="btn btn-warning">Update Complaint</button>
+            </div>
+
+            <!-- Alert Management Card -->
+            <div class="card">
+                <h3>🚨 Alert Management</h3>
+                <div class="form-group">
+                    <label>Alert ID</label>
+                    <input type="text" id="alertId" placeholder="Enter alert ID">
+                </div>
+                <div class="form-group">
+                    <label>Update Status</label>
+                    <select id="alertStatus">
+                        <option value="open">Open</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="resolved">Resolved</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Response</label>
+                    <textarea id="alertResponse" rows="2" placeholder="Response details..."></textarea>
+                </div>
+                <button onclick="updateAlert()" class="btn btn-danger">Update Alert</button>
+            </div>
+
+            <!-- Recent Activity Card -->
+            <div class="card">
+                <h3>📋 Recent Activity</h3>
+                <div class="activity-list" id="activityList">
+                    <div class="activity-item priority-high">
+                        <div>🚨 Emergency alert from Unit 42</div>
+                        <div class="activity-time">2 minutes ago</div>
+                    </div>
+                    <div class="activity-item priority-medium">
+                        <div>🔧 Maintenance request submitted</div>
+                        <div class="activity-time">15 minutes ago</div>
+                    </div>
+                    <div class="activity-item priority-low">
+                        <div>👋 New resident registered</div>
+                        <div class="activity-time">1 hour ago</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Actions -->
+        <div class="card">
+            <h3>🧪 Mobile App Communication Tests</h3>
+            <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                <button onclick="testEmergencyAlert()" class="btn btn-danger">Test Emergency Alert</button>
+                <button onclick="testMaintenance()" class="btn btn-warning">Test Maintenance Notice</button>
+                <button onclick="testWelcome()" class="btn">Test Welcome Message</button>
+                <button onclick="simulateComplaint()" class="btn">Simulate New Complaint</button>
+                <button onclick="refreshData()" class="btn">Refresh Dashboard</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simulate Firebase connection (replace with actual Firebase SDK)
+        let isConnected = false;
+        let stats = {
+            totalResidents: 247,
+            activeComplaints: 12,
+            securityAlerts: 3,
+            systemHealth: '99.8%'
+        };
+
+        // Connection simulation
+        function updateConnectionStatus(connected) {
+            const status = document.getElementById('connectionStatus');
+            if (connected) {
+                status.className = 'connection-status status-online';
+                status.textContent = '🟢 Connected to Firebase';
+                isConnected = true;
+            } else {
+                status.className = 'connection-status status-offline';
+                status.textContent = '🔴 Disconnected';
+                isConnected = false;
+            }
+        }
+
+        // Simulate connection after 2 seconds
+        setTimeout(() => {
+            updateConnectionStatus(true);
+        }, 2000);
+
+        // Form submission
+        document.getElementById('announcementForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            sendAnnouncement();
+        });
+
+        function sendAnnouncement() {
+            const title = document.getElementById('announcementTitle').value;
+            const message = document.getElementById('announcementMessage').value;
+            const priority = document.getElementById('announcementPriority').value;
+
+            if (!isConnected) {
+                alert('Not connected to Firebase. Please wait...');
+                return;
+            }
+
+            // Simulate sending announcement
+            console.log('Sending announcement:', { title, message, priority });
+            
+            // Add to activity
+            addActivity(`📢 Announcement sent: "${title}"`, priority);
+            
+            // Reset form
+            document.getElementById('announcementForm').reset();
+            
+            alert(`✅ Announcement "${title}" sent to all mobile app users!`);
+        }
+
+        function updateComplaint() {
+            const id = document.getElementById('complaintId').value;
+            const status = document.getElementById('complaintStatus').value;
+            const notes = document.getElementById('complaintNotes').value;
+
+            if (!id) {
+                alert('Please enter a complaint ID');
+                return;
+            }
+
+            console.log('Updating complaint:', { id, status, notes });
+            addActivity(`🛠️ Complaint ${id} updated to ${status}`, 'medium');
+            alert(`✅ Complaint ${id} updated successfully!`);
+        }
+
+        function updateAlert() {
+            const id = document.getElementById('alertId').value;
+            const status = document.getElementById('alertStatus').value;
+            const response = document.getElementById('alertResponse').value;
+
+            if (!id) {
+                alert('Please enter an alert ID');
+                return;
+            }
+
+            console.log('Updating alert:', { id, status, response });
+            addActivity(`🚨 Alert ${id} updated to ${status}`, 'high');
+            alert(`✅ Alert ${id} updated successfully!`);
+        }
+
+        // Test functions
+        function testEmergencyAlert() {
+            sendAnnouncement();
+            document.getElementById('announcementTitle').value = 'EMERGENCY ALERT';
+            document.getElementById('announcementMessage').value = 'Test emergency notification from dashboard';
+            document.getElementById('announcementPriority').value = 'urgent';
+        }
+
+        function testMaintenance() {
+            document.getElementById('announcementTitle').value = 'Maintenance Notice';
+            document.getElementById('announcementMessage').value = 'Scheduled maintenance in Building A from 9 AM to 12 PM';
+            document.getElementById('announcementPriority').value = 'medium';
+        }
+
+        function testWelcome() {
+            document.getElementById('announcementTitle').value = 'Welcome to Seren Residential';
+            document.getElementById('announcementMessage').value = 'Thank you for using our mobile app! Report issues, emergency alerts, and stay connected.';
+            document.getElementById('announcementPriority').value = 'low';
+        }
+
+        function simulateComplaint() {
+            stats.activeComplaints++;
+            updateStats();
+            addActivity('📝 New complaint received from Unit 45', 'medium');
+        }
+
+        function refreshData() {
+            // Simulate random stats changes
+            stats.activeComplaints = Math.floor(Math.random() * 20) + 5;
+            stats.securityAlerts = Math.floor(Math.random() * 5);
+            updateStats();
+            addActivity('🔄 Dashboard data refreshed', 'low');
+        }
+
+        function updateStats() {
+            document.getElementById('totalResidents').textContent = stats.totalResidents;
+            document.getElementById('activeComplaints').textContent = stats.activeComplaints;
+            document.getElementById('securityAlerts').textContent = stats.securityAlerts;
+            document.getElementById('systemHealth').textContent = stats.systemHealth;
+        }
+
+        function addActivity(message, priority) {
+            const activityList = document.getElementById('activityList');
+            const newActivity = document.createElement('div');
+            newActivity.className = `activity-item priority-${priority}`;
+            newActivity.innerHTML = `
+                <div>${message}</div>
+                <div class="activity-time">Just now</div>
+            `;
+            activityList.insertBefore(newActivity, activityList.firstChild);
+            
+            // Keep only last 10 activities
+            while (activityList.children.length > 10) {
+                activityList.removeChild(activityList.lastChild);
+            }
+        }
+
+        // Auto-refresh simulation
+        setInterval(() => {
+            if (isConnected && Math.random() > 0.7) {
+                const activities = [
+                    '👥 New resident logged in',
+                    '🔐 Security scan completed',
+                    '💬 Feedback received',
+                    '📊 System health check passed'
+                ];
+                const randomActivity = activities[Math.floor(Math.random() * activities.length)];
+                addActivity(randomActivity, 'low');
+            }
+        }, 10000); // Every 10 seconds
+    </script>
+</body>
+</html> 

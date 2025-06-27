@@ -3,17 +3,28 @@ export interface User {
   uid: string;
   name: string;
   email: string;
+  phone?: string;
+  estateId: string; // Links user to specific estate
+  estateCode: string; // For easy identification
   unitNumber: string;
   subscriptionStatus: 'active' | 'inactive' | 'pending';
   role: 'resident' | 'admin';
+  emergencyContact?: {
+    name: string;
+    phone: string;
+    relationship: string;
+  };
+  avatar?: string;
   createdAt: Date;
   lastLogin?: Date;
+  isActive: boolean;
 }
 
 // Alert types
 export interface EstateAlert {
   id: string;
   uid: string;
+  estateId: string; // Added estate association
   userName: string;
   unitNumber: string;
   timestamp: Date;
@@ -33,6 +44,7 @@ export interface EstateAlert {
 export interface Complaint {
   id: string;
   uid: string;
+  estateId: string; // Added estate association
   userName: string;
   unitNumber: string;
   type: ComplaintType;
@@ -316,4 +328,66 @@ export interface SearchParams {
   sortOrder?: 'asc' | 'desc'
   page?: number
   limit?: number
+}
+
+// Estate/Site Management Types
+export interface Estate {
+  id: string;
+  name: string;
+  code: string; // Unique identifier for registration (e.g., "SEREN001", "MEADOWS02")
+  address: {
+    street: string;
+    city: string;
+    province: string;
+    postalCode: string;
+    country: string;
+  };
+  contact: {
+    phone: string;
+    email: string;
+    emergencyContact: string;
+  };
+  branding: {
+    logo?: string;
+    primaryColor: string;
+    secondaryColor: string;
+    theme: 'light' | 'dark';
+  };
+  features: {
+    emergencyAlerts: boolean;
+    complaintManagement: boolean;
+    visitorManagement: boolean;
+    announcements: boolean;
+    events: boolean;
+  };
+  subscription: {
+    plan: 'basic' | 'premium' | 'enterprise';
+    maxResidents: number;
+    monthlyFee: number;
+    currency: string;
+    billingDate: Date;
+    status: 'active' | 'suspended' | 'cancelled';
+  };
+  settings: {
+    timezone: string;
+    language: string;
+    currency: string;
+    dateFormat: string;
+  };
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface EstateAdmin {
+  id: string;
+  estateId: string;
+  name: string;
+  email: string;
+  phone: string;
+  role: 'super_admin' | 'admin' | 'manager' | 'security';
+  permissions: string[];
+  isActive: boolean;
+  createdAt: Date;
+  lastLogin?: Date;
 } 

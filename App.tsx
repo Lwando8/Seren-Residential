@@ -3,24 +3,59 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
-import { Platform } from 'react-native';
+import { Platform, View, Text, ActivityIndicator } from 'react-native';
 
 import { ThemeProvider, useTheme } from './src/context/ThemeContext';
+import { AuthProvider, useAuth } from './src/context/AuthContext';
 import HomeScreen from './src/screens/HomeScreen';
 import ComplaintsScreen from './src/screens/ComplaintsScreen';
 import PersonalComplaintsScreen from './src/screens/PersonalComplaintsScreen';
 import CommunityScreen from './src/screens/CommunityScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
+import AuthFlowScreen from './src/screens/auth/AuthFlowScreen';
 import { RootTabParamList } from './src/types';
 
 const Tab = createBottomTabNavigator<RootTabParamList>();
 
-function TabNavigator() {
+function AppContent() {
   const { theme, isDark } = useTheme();
+  const { isAuthenticated, isLoading, user, estate } = useAuth();
+
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#0F172A' }}>
+        <ActivityIndicator size="large" color="#3B82F6" />
+        <Text style={{ color: '#fff', marginTop: 16, fontSize: 16 }}>Loading...</Text>
+      </View>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <AuthFlowScreen />;
+  }
 
   return (
     <>
       <StatusBar style={isDark ? 'light' : 'dark'} />
+      {user && estate && (
+        <View style={{ 
+          position: 'absolute', 
+          top: 50, 
+          left: 20, 
+          right: 20, 
+          zIndex: 1000,
+          backgroundColor: 'rgba(59, 130, 246, 0.9)',
+          padding: 12,
+          borderRadius: 8,
+          flexDirection: 'row',
+          alignItems: 'center'
+        }}>
+          <Ionicons name="business" size={16} color="#fff" style={{ marginRight: 8 }} />
+          <Text style={{ color: '#fff', fontSize: 12, fontWeight: '600', flex: 1 }}>
+            {user.name} • {estate.name} ({estate.code}) • Unit {user.unitNumber}
+          </Text>
+        </View>
+      )}
       <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
@@ -115,9 +150,11 @@ function TabNavigator() {
 export default function App() {
   return (
     <ThemeProvider>
-      <NavigationContainer>
-        <TabNavigator />
-      </NavigationContainer>
+      <AuthProvider>
+        <NavigationContainer>
+          <AppContent />
+        </NavigationContainer>
+      </AuthProvider>
     </ThemeProvider>
   );
 }
