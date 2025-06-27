@@ -378,7 +378,7 @@ export default function PersonalComplaintsScreen() {
             <View style={styles.header}>
               <View>
                 <Text style={[styles.title, { color: theme.text }]}>
-                  My Complaints 📝
+                  My Complaints
                 </Text>
                 <Text style={[styles.subtitle, { color: theme.textSecondary }]}>
                   Lodge and track your complaints

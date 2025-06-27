@@ -158,6 +158,21 @@ export default function HomeScreen() {
     return `${days}d ago`;
   };
 
+  const getTimeBasedGreeting = () => {
+    const hour = new Date().getHours();
+    const firstName = user?.name?.split(' ')[0] || 'Resident';
+    
+    if (hour >= 5 && hour < 12) {
+      return `Good morning, ${firstName}`;
+    } else if (hour >= 12 && hour < 17) {
+      return `Good afternoon, ${firstName}`;
+    } else if (hour >= 17 && hour < 21) {
+      return `Good evening, ${firstName}`;
+    } else {
+      return `Good evening, ${firstName}`;
+    }
+  };
+
   // Elegant color schemes
   const securityGradient = isDark 
     ? ['#1e293b', '#334155'] 
@@ -175,19 +190,12 @@ export default function HomeScreen() {
             <View style={styles.header}>
               <View>
                 <Text style={[styles.greeting, { color: theme.text }]}>
-                  Good Morning 👋
+                  {getTimeBasedGreeting()}
                 </Text>
                 <Text style={[styles.unitText, { color: theme.textSecondary }]}>
                   {user?.unitNumber} • {estate?.name}
                 </Text>
               </View>
-              <TouchableOpacity onPress={toggleTheme} style={[styles.themeButton, { backgroundColor: theme.glass }]}>
-                <Ionicons
-                  name={isDark ? 'sunny' : 'moon'}
-                  size={22}
-                  color={theme.text}
-                />
-              </TouchableOpacity>
             </View>
           </GlassCard>
 
@@ -256,6 +264,25 @@ export default function HomeScreen() {
               </Text>
               
               <View style={styles.circularButtonsContainer}>
+                {/* Visitor Management Button */}
+                <TouchableOpacity
+                  style={styles.circularButton}
+                  onPress={() => navigation.navigate('VisitorCheckIn')}
+                  activeOpacity={0.7}
+                >
+                  <LinearGradient
+                    colors={[theme.primary + '20', theme.primary + '10']}
+                    style={styles.circularButtonGradient}
+                  >
+                    <View style={[styles.circularButtonIcon, { backgroundColor: theme.primary }]}>
+                      <Ionicons name="people" size={22} color="white" />
+                    </View>
+                  </LinearGradient>
+                  <Text style={[styles.circularButtonText, { color: theme.text }]}>
+                    Visitors
+                  </Text>
+                </TouchableOpacity>
+
                 {/* Reports Button */}
                 <TouchableOpacity
                   style={styles.circularButton}

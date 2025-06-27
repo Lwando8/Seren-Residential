@@ -174,7 +174,7 @@ export default function ReportsScreen() {
             <View style={styles.header}>
               <View>
                 <Text style={[styles.title, { color: theme.text }]}>
-                  Estate Reports 📊
+                  Estate Reports
                 </Text>
                 <Text style={[styles.subtitle, { color: theme.textSecondary }]}>
                   Track maintenance & issues

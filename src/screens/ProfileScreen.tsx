@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -9,18 +9,15 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useNavigation } from '@react-navigation/native';
 import Screen from '../components/Screen';
 import GlassCard from '../components/GlassCard';
 import { useTheme } from '../context/ThemeContext';
-import SubscriptionScreen from './SubscriptionScreen';
-import SubscriptionService from '../services/SubscriptionService';
+
 
 export default function ProfileScreen() {
+  const navigation = useNavigation();
   const { theme, isDark, toggleTheme } = useTheme();
-  const [showSubscriptionScreen, setShowSubscriptionScreen] = useState(false);
-  const [subscriptionStatus, setSubscriptionStatus] = useState<'active' | 'inactive' | 'pending'>('inactive');
-
-  const subscriptionService = SubscriptionService.getInstance();
 
   // Mock user info - in real app, get from Auth context
   const mockUser = {
@@ -31,18 +28,7 @@ export default function ProfileScreen() {
     role: 'resident'
   };
 
-  useEffect(() => {
-    loadSubscriptionStatus();
-  }, []);
 
-  const loadSubscriptionStatus = async () => {
-    try {
-      const status = await subscriptionService.checkSubscriptionStatus(mockUser.uid);
-      setSubscriptionStatus(status);
-    } catch (error) {
-      console.error('Error loading subscription status:', error);
-    }
-  };
 
   const handleSignOut = () => {
     Alert.alert(
@@ -62,34 +48,9 @@ export default function ProfileScreen() {
     );
   };
 
-  const getSubscriptionStatusColor = () => {
-    switch (subscriptionStatus) {
-      case 'active': return theme.success;
-      case 'pending': return theme.warning;
-      case 'inactive': return theme.error;
-      default: return theme.textSecondary;
-    }
-  };
 
-  const getSubscriptionStatusText = () => {
-    switch (subscriptionStatus) {
-      case 'active': return 'Premium Active';
-      case 'pending': return 'Payment Pending';
-      case 'inactive': return 'Free Plan';
-      default: return 'Unknown';
-    }
-  };
 
-  if (showSubscriptionScreen) {
-    return (
-      <SubscriptionScreen 
-        onBack={() => {
-          setShowSubscriptionScreen(false);
-          loadSubscriptionStatus(); // Refresh status when returning
-        }} 
-      />
-    );
-  }
+
 
   return (
     <Screen>
@@ -102,15 +63,8 @@ export default function ProfileScreen() {
           <GlassCard intensity="light" style={styles.headerCard}>
             <View style={styles.header}>
               <Text style={[styles.title, { color: theme.text }]}>
-                Profile ✨
+                Profile
               </Text>
-              <TouchableOpacity onPress={toggleTheme} style={[styles.themeButton, { backgroundColor: theme.glass }]}>
-                <Ionicons
-                  name={isDark ? 'sunny' : 'moon'}
-                  size={22}
-                  color={theme.text}
-                />
-              </TouchableOpacity>
             </View>
           </GlassCard>
 
@@ -138,11 +92,6 @@ export default function ProfileScreen() {
               <Text style={[styles.userEmail, { color: theme.textTertiary }]}>
                 {mockUser.email}
               </Text>
-              <View style={[styles.subscriptionBadge, { backgroundColor: getSubscriptionStatusColor() }]}>
-                <Text style={[styles.subscriptionBadgeText, { color: theme.textInverse }]}>
-                  {getSubscriptionStatusText()}
-                </Text>
-              </View>
             </View>
           </GlassCard>
 
@@ -154,16 +103,16 @@ export default function ProfileScreen() {
             <View style={styles.quickActionsRow}>
               <TouchableOpacity
                 style={styles.quickActionButton}
-                onPress={() => setShowSubscriptionScreen(true)}
+                onPress={() => navigation?.navigate?.('ResidentApproval')}
               >
                 <LinearGradient
-                  colors={subscriptionStatus === 'active' ? ['#10B981', '#059669'] : ['#8B5CF6', '#7C3AED']}
+                  colors={['#10B981', '#059669']}
                   style={styles.quickActionGradient}
                 >
-                  <Ionicons name="card" size={20} color="white" />
+                  <Ionicons name="people" size={20} color="white" />
                 </LinearGradient>
                 <Text style={[styles.quickActionText, { color: theme.text }]}>
-                  {subscriptionStatus === 'active' ? 'Premium' : 'Upgrade'}
+                  Visitors
                 </Text>
               </TouchableOpacity>
 
@@ -194,6 +143,21 @@ export default function ProfileScreen() {
                 </LinearGradient>
                 <Text style={[styles.quickActionText, { color: theme.text }]}>
                   Support
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.quickActionButton}
+                onPress={() => Alert.alert('Settings', 'Quick settings coming soon!')}
+              >
+                <LinearGradient
+                  colors={['#6366F1', '#8B5CF6']}
+                  style={styles.quickActionGradient}
+                >
+                  <Ionicons name="settings" size={20} color="white" />
+                </LinearGradient>
+                <Text style={[styles.quickActionText, { color: theme.text }]}>
+                  Settings
                 </Text>
               </TouchableOpacity>
             </View>
@@ -423,16 +387,7 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     marginBottom: 12,
   },
-  subscriptionBadge: {
-    alignSelf: 'flex-start',
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-  },
-  subscriptionBadgeText: {
-    fontSize: 12,
-    fontWeight: '600',
-  },
+
   quickActionsContainer: {
     marginBottom: 32,
   },
