@@ -153,7 +153,7 @@ class ComplaintService {
     }
   }
 
-  // Get all complaints for a specific estate (for admin dashboard)
+  // Get all complaints for a specific estate
   async getAllComplaints(estateId?: string): Promise<Complaint[]> {
     try {
       let q;

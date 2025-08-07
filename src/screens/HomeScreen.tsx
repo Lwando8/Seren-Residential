@@ -12,15 +12,16 @@ import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
+import { StackNavigationProp } from '@react-navigation/stack';
 import Screen from '../components/Screen';
 import GlassCard from '../components/GlassCard';
 import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
 import AlertService from '../services/AlertService';
-import DashboardService from '../services/DashboardService';
-import { EstateAlert, RootTabParamList } from '../types';
 
-type HomeScreenNavigationProp = BottomTabNavigationProp<RootTabParamList, 'Home'>;
+import { EstateAlert, RootTabParamList, RootStackParamList } from '../types';
+
+type HomeScreenNavigationProp = BottomTabNavigationProp<RootTabParamList, 'Home'> & StackNavigationProp<RootStackParamList>;
 
 export default function HomeScreen() {
   const navigation = useNavigation<HomeScreenNavigationProp>();
@@ -29,14 +30,12 @@ export default function HomeScreen() {
   const [isEmergencyActive, setIsEmergencyActive] = useState(false);
   const [recentAlerts, setRecentAlerts] = useState<EstateAlert[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [announcements, setAnnouncements] = useState<any[]>([]);
+
 
   const alertService = AlertService.getInstance();
-  const dashboardService = DashboardService.getInstance();
 
   useEffect(() => {
     loadRecentAlerts();
-    loadAnnouncements();
   }, []);
 
   const loadRecentAlerts = async () => {
@@ -49,15 +48,7 @@ export default function HomeScreen() {
     }
   };
 
-  const loadAnnouncements = async () => {
-    if (!user) return;
-    try {
-      const dashboardAnnouncements = await dashboardService.getAnnouncements(user.uid);
-      setAnnouncements(dashboardAnnouncements.slice(0, 2)); // Show only recent 2 announcements
-    } catch (error) {
-      console.error('Error loading announcements:', error);
-    }
-  };
+
 
   const handleSecurityAlert = () => {
     Alert.alert(
@@ -84,6 +75,10 @@ export default function HomeScreen() {
 
   const navigateToCommunity = () => {
     navigation.navigate('Community');
+  };
+
+  const navigateToChat = () => {
+    navigation.navigate('Chat');
   };
 
   const sendAlert = async (type: 'security' | 'emergency' | 'medical') => {
@@ -257,89 +252,88 @@ export default function HomeScreen() {
               </TouchableOpacity>
             </View>
 
-            {/* Circular Quick Actions */}
+            {/* Quick Actions Carousel */}
             <GlassCard intensity="medium" style={styles.circularActionsContainer}>
               <Text style={[styles.circularActionsTitle, { color: theme.text }]}>
                 Quick Actions
               </Text>
               
-              <View style={styles.circularButtonsContainer}>
+              <ScrollView 
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                style={styles.carouselContainer}
+                contentContainerStyle={styles.carouselContent}
+              >
                 {/* Visitor Management Button */}
                 <TouchableOpacity
-                  style={styles.circularButton}
+                  style={styles.carouselButton}
                   onPress={() => navigation.navigate('VisitorCheckIn')}
                   activeOpacity={0.7}
                 >
-                  <LinearGradient
-                    colors={[theme.primary + '20', theme.primary + '10']}
-                    style={styles.circularButtonGradient}
-                  >
-                    <View style={[styles.circularButtonIcon, { backgroundColor: theme.primary }]}>
-                      <Ionicons name="people" size={22} color="white" />
-                    </View>
-                  </LinearGradient>
-                  <Text style={[styles.circularButtonText, { color: theme.text }]}>
+                  <View style={[styles.carouselButtonIcon, { backgroundColor: theme.primary }]}>
+                    <Ionicons name="people" size={22} color="white" />
+                  </View>
+                  <Text style={[styles.carouselButtonText, { color: theme.text }]}>
                     Visitors
                   </Text>
                 </TouchableOpacity>
 
                 {/* Reports Button */}
                 <TouchableOpacity
-                  style={styles.circularButton}
+                  style={styles.carouselButton}
                   onPress={navigateToReports}
                   activeOpacity={0.7}
                 >
-                  <LinearGradient
-                    colors={[theme.info + '20', theme.info + '10']}
-                    style={styles.circularButtonGradient}
-                  >
-                    <View style={[styles.circularButtonIcon, { backgroundColor: theme.info }]}>
-                      <Ionicons name="bar-chart" size={22} color="white" />
-                    </View>
-                  </LinearGradient>
-                  <Text style={[styles.circularButtonText, { color: theme.text }]}>
+                  <View style={[styles.carouselButtonIcon, { backgroundColor: theme.info }]}>
+                    <Ionicons name="bar-chart" size={22} color="white" />
+                  </View>
+                  <Text style={[styles.carouselButtonText, { color: theme.text }]}>
                     Reports
                   </Text>
                 </TouchableOpacity>
 
                 {/* Complaints Button */}
                 <TouchableOpacity
-                  style={styles.circularButton}
+                  style={styles.carouselButton}
                   onPress={navigateToComplaints}
                   activeOpacity={0.7}
                 >
-                  <LinearGradient
-                    colors={[theme.warning + '20', theme.warning + '10']}
-                    style={styles.circularButtonGradient}
-                  >
-                    <View style={[styles.circularButtonIcon, { backgroundColor: theme.warning }]}>
-                      <Ionicons name="document-text" size={22} color="white" />
-                    </View>
-                  </LinearGradient>
-                  <Text style={[styles.circularButtonText, { color: theme.text }]}>
-                    Complaints
+                  <View style={[styles.carouselButtonIcon, { backgroundColor: theme.warning }]}>
+                    <Ionicons name="document-text" size={22} color="white" />
+                  </View>
+                  <Text style={[styles.carouselButtonText, { color: theme.text }]}>
+                    Issues
                   </Text>
                 </TouchableOpacity>
 
                 {/* Community Button */}
                 <TouchableOpacity
-                  style={styles.circularButton}
+                  style={styles.carouselButton}
                   onPress={navigateToCommunity}
                   activeOpacity={0.7}
                 >
-                  <LinearGradient
-                    colors={[theme.success + '20', theme.success + '10']}
-                    style={styles.circularButtonGradient}
-                  >
-                    <View style={[styles.circularButtonIcon, { backgroundColor: theme.success }]}>
-                      <Ionicons name="people-circle" size={22} color="white" />
-                    </View>
-                  </LinearGradient>
-                  <Text style={[styles.circularButtonText, { color: theme.text }]}>
-                    Community
+                  <View style={[styles.carouselButtonIcon, { backgroundColor: theme.success }]}>
+                    <Ionicons name="people-circle" size={22} color="white" />
+                  </View>
+                  <Text style={[styles.carouselButtonText, { color: theme.text }]}>
+                    Social
                   </Text>
                 </TouchableOpacity>
-              </View>
+
+                {/* Chat Button */}
+                <TouchableOpacity
+                  style={styles.carouselButton}
+                  onPress={navigateToChat}
+                  activeOpacity={0.7}
+                >
+                  <View style={[styles.carouselButtonIcon, { backgroundColor: '#9333ea' }]}>
+                    <Ionicons name="chatbubbles" size={22} color="white" />
+                  </View>
+                  <Text style={[styles.carouselButtonText, { color: theme.text }]}>
+                    Chat
+                  </Text>
+                </TouchableOpacity>
+              </ScrollView>
             </GlassCard>
           </View>
 
@@ -544,32 +538,26 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     textAlign: 'center',
   },
-  circularButtonsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-    marginTop: 10,
+  carouselContainer: {
+    marginTop: 16,
   },
-  circularButton: {
-    alignItems: 'center',
-    width: 80,
-    marginHorizontal: 5,
+  carouselContent: {
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+    gap: 24,
   },
-  circularButtonGradient: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
+  carouselButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 60,
+  },
+  carouselButtonIcon: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 8,
-  },
-  circularButtonIcon: {
-    width: 46,
-    height: 46,
-    borderRadius: 23,
-    justifyContent: 'center',
-    alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -579,11 +567,11 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 4,
   },
-  circularButtonText: {
+  carouselButtonText: {
     fontSize: 11,
     fontWeight: '600',
     textAlign: 'center',
-    maxWidth: 80,
+    maxWidth: 60,
     lineHeight: 14,
   },
   alertsSection: {

@@ -127,7 +127,7 @@ class AlertService {
     }
   }
 
-  // Get all alerts (for admin dashboard)
+  // Get all alerts for estate management
   async getAllAlerts(): Promise<EstateAlert[]> {
     try {
       const q = query(

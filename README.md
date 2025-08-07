@@ -1,6 +1,6 @@
-# 📱 Seren Residential App
+# 📱 Seren Residential Mobile App
 
-A comprehensive React Native mobile application for residential estate management, providing residents with convenient access to community services, complaint filing, subscription management, and more.
+A React Native mobile application for residential estate management, providing residents with convenient access to community services, complaint filing, subscription management, and emergency alerts.
 
 ## 🚀 Quick Start
 
@@ -38,11 +38,11 @@ A comprehensive React Native mobile application for residential estate managemen
 
 ## 📱 App Features
 
-### 🏠 Home Dashboard
+### 🏠 Home Screen
 - Quick access to core features
-- Estate announcements and updates
-- Weather information
-- Emergency contacts
+- Emergency alert buttons (SOS, Medical, Security)
+- Recent alerts and activity
+- Estate status information
 
 ### 📋 Reports & Complaints
 - **Infrastructure Reports:** Report issues with lighting, gates, pools, etc.

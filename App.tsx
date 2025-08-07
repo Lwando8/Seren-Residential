@@ -13,6 +13,7 @@ import ComplaintsScreen from './src/screens/ComplaintsScreen';
 import PersonalComplaintsScreen from './src/screens/PersonalComplaintsScreen';
 import CommunityScreen from './src/screens/CommunityScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
+import ChatScreen from './src/screens/ChatScreen';
 import AuthFlowScreen from './src/screens/auth/AuthFlowScreen';
 import VisitorCheckInScreen from './src/screens/visitor/VisitorCheckInScreen';
 import PinEntryScreen from './src/screens/visitor/PinEntryScreen';
@@ -104,12 +105,12 @@ function TabNavigator() {
       <Tab.Screen 
         name="PersonalComplaints" 
         component={PersonalComplaintsScreen} 
-        options={{ tabBarLabel: 'Complaints' }}
+        options={{ tabBarLabel: 'Issues' }}
       />
       <Tab.Screen 
         name="Community" 
         component={CommunityScreen} 
-        options={{ tabBarLabel: 'Community' }}
+        options={{ tabBarLabel: 'Social' }}
       />
       <Tab.Screen 
         name="Profile" 
@@ -168,6 +169,7 @@ function AppContent() {
         <Stack.Screen name="UnitSelection" component={UnitSelectionScreen} />
         <Stack.Screen name="ResidentApproval" component={ResidentApprovalScreen} />
         <Stack.Screen name="VisitStatus" component={VisitStatusScreen} />
+        <Stack.Screen name="Chat" component={ChatScreen} />
       </Stack.Navigator>
     </>
   );

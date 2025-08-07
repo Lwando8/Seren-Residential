@@ -88,38 +88,7 @@ try {
   };
 }
 
-// Multi-tenant dashboard communication helper
-export const dashboardConfig = {
-  collections: {
-    // Core multi-tenant collections
-    estates: 'estates',
-    estateAdmins: 'estate_admins',
-    
-    // Estate-specific collections (will be filtered by estateId)
-    alerts: 'estate_alerts',
-    complaints: 'complaints', 
-    users: 'users',
-    subscriptions: 'subscriptions',
-    announcements: 'announcements',
-    maintenance: 'maintenance_requests',
-    visitors: 'visitors',
-    incidents: 'security_incidents',
-    
-    // System-wide collections
-    dashboardUsers: 'dashboard_users',
-    systemLogs: 'system_logs'
-  },
-  realtime: {
-    enablePersistence: true,
-    enableNetwork: true,
-    enableOfflineSupport: true
-  },
-  multiTenant: {
-    enabled: true,
-    estateFieldName: 'estateId',
-    isolationLevel: 'strict' // 'strict' | 'loose'
-  }
-};
+
 
 export { db, storage, auth };
 export default app; 

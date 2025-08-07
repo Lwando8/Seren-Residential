@@ -116,6 +116,38 @@ export interface CommunityEvent {
   isAttending: boolean;
 }
 
+// Security Communication types
+export interface SecurityIncident {
+  id: string;
+  title: string;
+  description: string;
+  type: 'security_alert' | 'maintenance_request' | 'complaint_follow_up' | 'general_inquiry';
+  priority: 'low' | 'medium' | 'high' | 'urgent';
+  status: 'open' | 'acknowledged' | 'in_progress' | 'resolved' | 'closed';
+  createdAt: Date;
+  updatedAt: Date;
+  residentId: string;
+  residentName: string;
+  unitNumber: string;
+  estateId: string;
+  assignedOfficer?: string;
+  estimatedResolution?: Date;
+  location?: string;
+  lastMessage?: SecurityMessage;
+}
+
+export interface SecurityMessage {
+  id: string;
+  incidentId: string;
+  senderId: string;
+  senderName: string;
+  senderRole: 'resident' | 'security' | 'management';
+  message: string;
+  timestamp: Date;
+  type: 'message' | 'status_update' | 'system_notification';
+  attachments?: string[];
+}
+
 // Navigation types
 export type RootTabParamList = {
   Home: undefined;
@@ -125,23 +157,19 @@ export type RootTabParamList = {
   Profile: undefined;
 };
 
-// User and Authentication Types
-export interface DashboardUser {
-  id: string
-  email: string
-  name: string
-  role: 'admin' | 'security' | 'manager'
-  permissions: string[]
-  lastLogin: Date
-  avatar?: string
-}
+export type RootStackParamList = {
+  MainTabs: undefined;
+  VisitorCheckIn: undefined;
+  PinEntry: undefined;
+  PinDocumentCapture: undefined;
+  QRDocumentCapture: undefined;
+  UnitSelection: undefined;
+  ResidentApproval: undefined;
+  VisitStatus: undefined;
+  Chat: undefined;
+};
 
-export interface AuthState {
-  user: DashboardUser | null
-  isAuthenticated: boolean
-  isLoading: boolean
-  error: string | null
-}
+
 
 // Resident Types (from mobile app)
 export interface Resident {
@@ -228,26 +256,7 @@ export interface InfrastructureReport {
   }
 }
 
-// Dashboard Analytics Types
-export interface DashboardStats {
-  totalResidents: number
-  activeComplaints: number
-  resolvedToday: number
-  securityIncidents: number
-  maintenanceRequests: number
-  visitorsPending: number
-  recentActivity: Activity[]
-}
 
-export interface Activity {
-  id: string
-  type: 'complaint' | 'incident' | 'maintenance' | 'visitor' | 'system'
-  title: string
-  description: string
-  timestamp: Date
-  priority?: 'low' | 'medium' | 'high' | 'urgent'
-  residentName?: string
-  location?: string
 }
 
 // Visitor Management Types
