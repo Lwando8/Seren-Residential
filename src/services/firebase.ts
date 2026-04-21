@@ -1,7 +1,8 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
+import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
-import { getAuth, initializeAuth, getReactNativePersistence } from 'firebase/auth';
+import { getAuth, initializeAuth, getReactNativePersistence, browserLocalPersistence } from 'firebase/auth';
+import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // For development/testing - replace with your real Firebase config
@@ -29,10 +30,12 @@ try {
   // Initialize Storage
   storage = getStorage(app);
   
-  // Initialize Auth with AsyncStorage persistence
+  // Initialize Auth with platform-appropriate persistence
   try {
     auth = initializeAuth(app, {
-      persistence: getReactNativePersistence(AsyncStorage)
+      persistence: Platform.OS === 'web'
+        ? browserLocalPersistence
+        : getReactNativePersistence(AsyncStorage)
     });
   } catch (authError) {
     console.warn('Firebase Auth initialization failed, using fallback:', authError);
