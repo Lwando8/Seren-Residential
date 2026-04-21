@@ -333,6 +333,20 @@ export default function HomeScreen() {
                     Chat
                   </Text>
                 </TouchableOpacity>
+
+                {/* Capture Button */}
+                <TouchableOpacity
+                  style={styles.carouselButton}
+                  onPress={() => navigation.navigate('CaptureHome')}
+                  activeOpacity={0.7}
+                >
+                  <View style={[styles.carouselButtonIcon, { backgroundColor: '#f59e0b' }]}>
+                    <Ionicons name="camera" size={22} color="white" />
+                  </View>
+                  <Text style={[styles.carouselButtonText, { color: theme.text }]}>
+                    Capture
+                  </Text>
+                </TouchableOpacity>
               </ScrollView>
             </GlassCard>
           </View>

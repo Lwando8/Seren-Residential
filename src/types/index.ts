@@ -167,6 +167,53 @@ export type RootStackParamList = {
   ResidentApproval: undefined;
   VisitStatus: undefined;
   Chat: undefined;
+  DeviceRegistration: undefined;
+  CaptureHome: undefined;
+  CaptureModeSelection: {
+    sessionData: {
+      sessionId: string;
+      residentInfo: {
+        name: string;
+        unitNumber: string;
+        phone?: string;
+        email?: string;
+      };
+    };
+  };
+  CaptureImage: {
+    sessionData: {
+      sessionId: string;
+      residentInfo: {
+        name: string;
+        unitNumber: string;
+      };
+    };
+    mode: string;
+    availableCaptures: string[];
+  };
+  CaptureCompletion: {
+    sessionData: {
+      sessionId: string;
+      residentInfo: {
+        name: string;
+        unitNumber: string;
+      };
+    };
+    completionData: {
+      sessionId: string;
+      residentInfo: {
+        name: string;
+        unitNumber: string;
+      };
+      mode: string;
+      totalCaptures: number;
+      completedAt: string;
+      captures: {
+        person?: { timestamp: string };
+        vehicle?: { timestamp: string };
+      };
+    };
+  };
 };
 
 

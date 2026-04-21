@@ -22,6 +22,11 @@ import QRDocumentCaptureScreen from './src/screens/visitor/QRDocumentCaptureScre
 import UnitSelectionScreen from './src/screens/visitor/UnitSelectionScreen';
 import ResidentApprovalScreen from './src/screens/visitor/ResidentApprovalScreen';
 import VisitStatusScreen from './src/screens/visitor/VisitStatusScreen';
+import DeviceRegistrationScreen from './src/screens/capture/DeviceRegistrationScreen';
+import CaptureHomeScreen from './src/screens/capture/CaptureHomeScreen';
+import CaptureModeSelectionScreen from './src/screens/capture/CaptureModeSelectionScreen';
+import CaptureImageScreen from './src/screens/capture/CaptureImageScreen';
+import CaptureCompletionScreen from './src/screens/capture/CaptureCompletionScreen';
 import { RootTabParamList } from './src/types';
 
 const Tab = createBottomTabNavigator<RootTabParamList>();
@@ -170,6 +175,11 @@ function AppContent() {
         <Stack.Screen name="ResidentApproval" component={ResidentApprovalScreen} />
         <Stack.Screen name="VisitStatus" component={VisitStatusScreen} />
         <Stack.Screen name="Chat" component={ChatScreen} />
+        <Stack.Screen name="DeviceRegistration" component={DeviceRegistrationScreen} />
+        <Stack.Screen name="CaptureHome" component={CaptureHomeScreen} />
+        <Stack.Screen name="CaptureModeSelection" component={CaptureModeSelectionScreen} />
+        <Stack.Screen name="CaptureImage" component={CaptureImageScreen} />
+        <Stack.Screen name="CaptureCompletion" component={CaptureCompletionScreen} />
       </Stack.Navigator>
     </>
   );
